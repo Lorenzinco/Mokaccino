@@ -3,6 +3,7 @@ use log::error;
 use log::info;
 use log::trace;
 use log::warn;
+use crate::client::utils::traits;
 
 /*
 Mokaccino's network handler class.
@@ -71,7 +72,7 @@ impl NetworkHandler {
     pub fn getActivePeers(&self) -> Vec<Peer> {
         debug!("Active peer list requested");
         let mut active_peers: Vec<Peer> = Vec::new();
-        for peer in self.peers.into_iter() {
+        for peer in self.peers {
             if peer.active {
                 active_peers.push(peer);
             }
