@@ -58,6 +58,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "hashmap"
+version = "0.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "58f4c5bfe5d332cdefc57bd31471448f8b6cb0398542f4aecc2620e577e6fd54"
+
+[[package]]
 name = "hermit-abi"
 version = "0.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -121,6 +127,7 @@ name = "mokaccino"
 version = "0.1.0"
 dependencies = [
  "env_logger",
+ "hashmap",
  "log",
 ]
 
