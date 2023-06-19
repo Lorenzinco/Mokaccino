@@ -18,16 +18,16 @@ enum IpVersion {
 }
 
 struct IpAddr {
-    ipVersion: IpVersion,
-    ipAddress: String
+    ip_version: IpVersion,
+    ip_address: String
 }
 
 struct Peer{
     active: bool,
-    ipAddress: IpAddr,
+    ip_address: IpAddr,
     port: u16,
     username: String,
-    publicKey: String,
+    public_key: String,
 }
 
 //network handler class
@@ -36,8 +36,8 @@ pub struct NetworkHandler {
     server: Peer,
     port: u16,
     username: String,
-    publicKey: String,
-    privateKey: String,
+    public_key: String,
+    private_key: String,
 }
 
 impl NetworkHandler {
@@ -50,16 +50,16 @@ impl NetworkHandler {
                 active: true,
                 port: 23232,
                 username: String::from("server"),
-                ipAddress: IpAddr {
-                    ipVersion: IpVersion::IPV4,
-                    ipAddress: String::from("mokaccino.ddns.net"),
+                ip_address: IpAddr {
+                    ip_version: IpVersion::IPV4,
+                    ip_address: String::from("mokaccino.ddns.net"),
                 },
-                publicKey: String::from("")
+                public_key: String::from("")
             },
             port: port,
             username: username,
-            publicKey: public_key,
-            privateKey: private_key
+            public_key: public_key,
+            private_key: private_key
         }
     }
 
