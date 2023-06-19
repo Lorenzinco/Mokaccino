@@ -1,6 +1,5 @@
 use log::{debug, error, info, trace, warn};
 
-
 fn main() {
     env_logger::init();
     info!("Trying to print a message to the console");

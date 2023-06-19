@@ -12,21 +12,21 @@ The class also defines all the other functions to retrieve the data in order to 
 */
 
 enum IpVersion {
-    ipv4,
-    ipv6
+    IPV4,
+    IPV6
 }
 
 struct IpAddr {
-    ip_version: IpVersion,
-    ip_address: String
+    ipVersion: IpVersion,
+    ipAddress: String
 }
 
 struct Peer{
     active: bool,
-    ip_address: IpAddr,
+    ipAddress: IpAddr,
     port: u16,
     username: String,
-    public_key: String,
+    publicKey: String,
 }
 
 //network handler class
@@ -35,37 +35,48 @@ pub struct NetworkHandler {
     server: Peer,
     port: u16,
     username: String,
-    public_key: String,
-    private_key: String,
+    publicKey: String,
+    privateKey: String,
 }
 
 impl NetworkHandler {
     //constructor
     pub fn new(port: u16, username: String, public_key: String, private_key: String) -> NetworkHandler {
-        !debug!("Creating a new network handler");
+        debug!("Creating a new network handler");
         NetworkHandler {
             peers: Vec::new(),
             server: Peer {
-                ip_address: IpAddr {
-                    active: true,
-                    ip_version: IpVersion::ipv4,
-                    ip_address: String::from("mokaccino.ddns.net"),
-                    port: 23232,
-                    username: String::from("server"),
-                }
+                active: true,
+                port: 23232,
+                username: String::from("server"),
+                ipAddress: IpAddr {
+                    ipVersion: IpVersion::IPV4,
+                    ipAddress: String::from("mokaccino.ddns.net"),
+                },
+                publicKey: String::from("")
             },
             port: port,
             username: username,
-            public_key: public_key,
-            private_key: private_key
+            publicKey: public_key,
+            privateKey: private_key
         }
     }
 
     //getters
-    pub fn get_peers(&self) -> Vec<Peer> {
-        !debug!("Current peers");
+    pub fn getPeers(&self) -> Vec<Peer> {
+        debug!("Peer list requested");
         self.peers
     }
 
+    pub fn getActivePeers(&self) -> Vec<Peer> {
+        debug!("Active peer list requested");
+        let mut active_peers: Vec<Peer> = Vec::new();
+        for peer in self.peers {
+            if peer.active {
+                active_peers.push(peer);
+            }
+        }
+        active_peers
+    }
 }
 
