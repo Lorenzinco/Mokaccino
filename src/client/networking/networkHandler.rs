@@ -71,7 +71,7 @@ impl NetworkHandler {
     pub fn getActivePeers(&self) -> Vec<Peer> {
         debug!("Active peer list requested");
         let mut active_peers: Vec<Peer> = Vec::new();
-        for peer in self.peers {
+        for peer in self.peers.into_iter() {
             if peer.active {
                 active_peers.push(peer);
             }
