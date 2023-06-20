@@ -62,9 +62,15 @@ impl Client{
                 self.parser.send_output();
             }
         });
+        let network_downstream: thread::JoinHandle<_> = thread::spawn(move || {
+            loop{
+                self.stream_handler.receive();
+            }
+        });
     
         input.join().unwrap();
         output.join().unwrap();
         cmd.join().unwrap();
+        network_downstream.join().unwrap();
     }
 }
