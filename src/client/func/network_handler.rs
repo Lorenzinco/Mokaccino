@@ -126,7 +126,7 @@ impl NetworkHandler {
         let mut output = String::new();
         let dest: &Peer = self.peers.get(&username).expect("Error getting peer");
         self.stream_handler.send(format!("{} {}",get_op_code(Command::Connect(username)),self.username), dest.ip_address, dest.port);
-        output.push_str(&format!("Sent: {} {}",get_op_code(Command::Connect(username)),self.username));
+        output.push_str(&format!("Sent: {} {}",get_op_code(Command::Connect(String::new())),self.username));
         output
     }
 }

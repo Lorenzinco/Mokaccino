@@ -1,6 +1,8 @@
-#![path = "../network_handler.rs"]
+#[path="./network_handler.rs"]
 mod network_handler;
 use network_handler::NetworkHandler;
+
+
 
 pub const HELP:&str = "Avaliable commands:
     \x1b[96mhelp\x1b[95m <command>\x1b[0m - shows help for a command
@@ -54,7 +56,7 @@ pub fn connect(args: Vec<&str>)->String{
         },
         2 => {
             command_output=format!("Connecting to {}...\n",args[1]);
-            command_output = command_output + network_handler::connect(args[1]);
+            //command_output = command_output + NetworkHandler::connect(args[1]);
 
         },
         _ => {
