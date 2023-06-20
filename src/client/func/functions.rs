@@ -1,3 +1,6 @@
+#![path = "../network_handler.rs"]
+mod network_handler;
+use network_handler::NetworkHandler;
 
 pub const HELP:&str = "Avaliable commands:
     \x1b[96mhelp\x1b[95m <command>\x1b[0m - shows help for a command
@@ -41,4 +44,22 @@ pub fn exit(){
 pub fn login(){
     println!("\x1b[95mLogging in...\x1b[0m");
     println!("Logged in!");
+}
+
+pub fn connect(args: Vec<&str>)->String{
+    let mut command_output = String::new();
+    match args.len(){
+        1 => {
+            command_output=String::from("Too few arguments, type help <command> to see more information about a command.");
+        },
+        2 => {
+            command_output=format!("Connecting to {}...\n",args[1]);
+            command_output = command_output + network_handler::connect(args[1]);
+
+        },
+        _ => {
+            println!("Too many arguments, type help <command> to see more information about a command.");
+        }
+    }
+    command_output
 }

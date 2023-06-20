@@ -1,5 +1,6 @@
 use log::debug;
 use std::net::{IpAddr, UdpSocket};
+use std::sync::mpsc;
 
 pub struct StreamHandler {
     stream: UdpSocket,
@@ -7,7 +8,7 @@ pub struct StreamHandler {
 
 impl StreamHandler {
     //constructor
-    pub fn new(port: u16) -> StreamHandler {
+    pub fn new(port: u16,stream_rx:mpsc::Receiver<String>,network_tx:mpsc::Sender<String>) -> StreamHandler {
         debug!("Creating a new stream handler");
         StreamHandler {
             stream: UdpSocket::bind(format!("127.0.0.1:{}", port)).expect("Error binding socket")

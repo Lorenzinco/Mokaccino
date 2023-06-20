@@ -3,6 +3,11 @@ use std::collections::HashMap;
 use log::error;
 use log::info;
 use log::debug;
+use std::sync::mpsc;
+
+#[path="../../utils/networking/protocol.rs"]
+mod protocol;
+use protocol::{Command, get_op_code};
 
 #[path="../../utils/networking/stream_handler.rs"]
 mod stream_handler;
@@ -30,14 +35,16 @@ pub struct NetworkHandler {
     username: String,
     public_key: String,
     private_key: String,
-    stream_handler: StreamHandler
+    stream_handler: StreamHandler,
+    tx: mpsc::Sender<String>,
+    rx: mpsc::Receiver<String>
 }
 
 
 
 impl NetworkHandler {
     //constructor
-    pub fn new(port: u16, username: String, public_key: String, private_key: String) -> NetworkHandler {
+    pub fn new(port: u16, username: String, public_key: String, private_key: String,stream_tx:mpsc::Sender<String>,stream_rx:mpsc::Receiver<String>,network_tx:mpsc::Sender<String>,network_rx:mpsc::Receiver<String>) -> NetworkHandler {
         debug!("Creating a new network handler");
         NetworkHandler {
             peers: HashMap::new(),
@@ -45,7 +52,9 @@ impl NetworkHandler {
             username: username,
             public_key: public_key,
             private_key: private_key,
-            stream_handler: StreamHandler::new(port),
+            stream_handler: StreamHandler::new(port,stream_rx,network_tx),
+            tx: stream_tx,
+            rx: network_rx,
         }
     }
 
@@ -111,5 +120,13 @@ impl NetworkHandler {
     pub fn remove_peer(&mut self, peer: Peer) {
         self.peers.remove(&peer.username).expect("Error removing peer");
         info!("Peer {} removed", peer.username);
+    }
+
+    pub fn connect(&mut self, username:String)->String{
+        let mut output = String::new();
+        let dest: &Peer = self.peers.get(&username).expect("Error getting peer");
+        self.stream_handler.send(format!("{} {}",get_op_code(Command::Connect(username)),self.username), dest.ip_address, dest.port);
+        output.push_str(&format!("Sent: {} {}",get_op_code(Command::Connect(username)),self.username));
+        output
     }
 }

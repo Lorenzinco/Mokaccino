@@ -1,6 +1,6 @@
 //macros for the communication protocol
 
-enum Command {
+pub enum Command {
     //client to server
     Login,
     Whereis(String),
@@ -15,7 +15,7 @@ enum Command {
     Voice(String)
 }
 
-fn get_op_code(cmd:Command)->u8{
+pub fn get_op_code(cmd:Command)->u8{
     match cmd{
         Command::Login => 0,
         Command::Connect(_) => 1,

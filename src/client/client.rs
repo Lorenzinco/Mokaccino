@@ -26,6 +26,8 @@ impl Client{
         let config_file = fs::read_to_string("./config.json").expect("Unable to read config file");
         let (input_tx,output_rx) = mpsc::channel();
         let (parser_tx,parser_rx) = mpsc::channel();
+        let (stream_tx,stream_rx) = mpsc::channel();
+        let (network_tx,network_rx) = mpsc::channel();
         
         let config : Value = serde_json::from_str(&config_file).expect("Unable to parse config file");
         let port: u16 = config["port"].as_u64().unwrap() as u16;
@@ -37,7 +39,7 @@ impl Client{
             parser: func::parser::Parser::new(parser_tx,output_rx),
             input: utils::terminal::user_interface::Input::new(input_tx),
             output: utils::terminal::user_interface::Output::new(parser_rx),
-            network_handler: func::network_handler::NetworkHandler::new(port,username,public_key,private_key),
+            network_handler: func::network_handler::NetworkHandler::new(port,username,public_key,private_key,stream_tx,stream_rx,network_tx,network_rx),
         }
     }
 
