@@ -7,6 +7,7 @@ authors = ["[Lorenzinco,LoldemortXP]"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+colored = "2.0.0"
 const_format = "0.2.31"
 env_logger = "0.10.0"
 hashmap = "0.0.1"

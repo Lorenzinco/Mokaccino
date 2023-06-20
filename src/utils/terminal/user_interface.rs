@@ -10,12 +10,12 @@ use log::debug;
 */
 
 pub const BANNER:&'static str = formatcp!("
- __    __     ______     __  __     ______     ______     ______     __     __   __     ______    
-/\\  -./  \\   /\\  __ \\   /\\ \\/ /    /\\  __ \\   /\\  ___\\   /\\  ___\\   /\\ \\   /\\  -.\\ \\   /\\  __ \\   
-\\ \\ \\-./\\ \\  \\ \\ \\/\\ \\  \\ \\  _ -.  \\ \\  __ \\  \\ \\ \\____  \\ \\ \\____  \\ \\ \\  \\ \\ \\-.  \\  \\ \\ \\/\\ \\  
- \\ \\_\\ \\ \\_\\  \\ \\_____\\  \\ \\_\\ \\_\\  \\ \\_\\ \\_\\  \\ \\_____\\  \\ \\_____\\  \\ \\_\\  \\ \\_\\\\ \\_\\  \\ \\_____\\ 
-  \\/_/  \\/_/   \\/_____/   \\/_/\\/_/   \\/_/\\/_/   \\/_____/   \\/_____/   \\/_/   \\/_/ \\/_/   \\/_____/ 
-   Build version: {} - Authors:{} - Copyright © TRX, all rights reserved. \nType help for a list of commands\n",env!("CARGO_PKG_VERSION"),env!("CARGO_PKG_AUTHORS"));
+\x1b[92m __    __ \x1b[0m    ______     __  __     ______     ______     ______     __     __   __     ______    
+\x1b[92m/\\  -./  \\\x1b[0m   /\\  __ \\   /\\ \\/ /    /\\  __ \\   /\\  ___\\   /\\  ___\\   /\\ \\   /\\  -.\\ \\   /\\  __ \\   
+\x1b[92m\\ \\ \\-./\\ \\\x1b[0m  \\ \\ \\/\\ \\  \\ \\  _ -.  \\ \\  __ \\  \\ \\ \\____  \\ \\ \\____  \\ \\ \\  \\ \\ \\-.  \\  \\ \\ \\/\\ \\  
+\x1b[92m \\ \\_\\ \\ \\_\\\x1b[0m  \\ \\_____\\  \\ \\_\\ \\_\\  \\ \\_\\ \\_\\  \\ \\_____\\  \\ \\_____\\  \\ \\_\\  \\ \\_\\\\ \\_\\  \\ \\_____\\ 
+\x1b[92m  \\/_/  \\/_/ \x1b[0m  \\/_____/   \\/_/\\/_/   \\/_/\\/_/   \\/_____/   \\/_____/   \\/_/   \\/_/ \\/_/   \\/_____/ 
+   \x1b[94mBuild version: {} - Authors:{} - Copyright © \x1b[92mTRX\x1b[94m, all rights reserved. \n\x1b[0mType help for a list of commands\n",env!("CARGO_PKG_VERSION"),env!("CARGO_PKG_AUTHORS"));
 
 pub const HELP:&str = r"
 
@@ -42,7 +42,7 @@ impl Input{
 
     pub fn get_input(&mut self){
         self.input.clear();
-        print!("> ");
+        print!("\x1b[92m>\x1b[0m ");
         io::stdout().flush().unwrap();
         io::stdin().read_line(&mut self.input).unwrap();
         debug!("input: {}",self.input.clone());
