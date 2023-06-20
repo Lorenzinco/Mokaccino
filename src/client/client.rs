@@ -13,8 +13,7 @@ pub struct Client{
     input: utils::terminal::user_interface::Input,
     output: utils::terminal::user_interface::Output,
     parser: func::parser::Parser,
-    network_handler: utils::networking::network_handler::NetworkHandler,
-    stream_handler: utils::networking::stream_handler::StreamHandler,
+    network_handler: func::network_handler::NetworkHandler,
 }
 
 impl Client{
@@ -38,8 +37,7 @@ impl Client{
             parser: func::parser::Parser::new(parser_tx,output_rx),
             input: utils::terminal::user_interface::Input::new(input_tx),
             output: utils::terminal::user_interface::Output::new(parser_rx),
-            network_handler: utils::networking::network_handler::NetworkHandler::new(port,username,public_key,private_key),
-            stream_handler: utils::networking::stream_handler::StreamHandler::new(port),
+            network_handler: func::network_handler::NetworkHandler::new(port,username,public_key,private_key),
         }
     }
 
@@ -62,15 +60,9 @@ impl Client{
                 self.parser.send_output();
             }
         });
-        let network_downstream: thread::JoinHandle<_> = thread::spawn(move || {
-            loop{
-                self.stream_handler.receive();
-            }
-        });
     
         input.join().unwrap();
         output.join().unwrap();
         cmd.join().unwrap();
-        network_downstream.join().unwrap();
     }
 }

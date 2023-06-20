@@ -3,6 +3,10 @@ use std::collections::HashMap;
 use log::error;
 use log::info;
 use log::debug;
+
+#[path="../../utils/networking/stream_handler.rs"]
+mod stream_handler;
+use stream_handler::StreamHandler;
 /*
 Mokaccino's network handler class.
 The class takes care of handling all the connections between all the peers.
@@ -20,13 +24,13 @@ pub struct Peer{
 }
 
 //network handler class
-#[derive(Clone)]
 pub struct NetworkHandler {
     peers: HashMap<String,Peer>,
     pending_peers: HashMap<String,Peer>,
     username: String,
     public_key: String,
     private_key: String,
+    stream_handler: StreamHandler
 }
 
 
@@ -40,7 +44,8 @@ impl NetworkHandler {
             pending_peers: HashMap::new(),
             username: username,
             public_key: public_key,
-            private_key: private_key
+            private_key: private_key,
+            stream_handler: StreamHandler::new(port),
         }
     }
 
