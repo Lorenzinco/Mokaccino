@@ -12,7 +12,7 @@ The class also defines all the other functions to retrieve the data in order to 
 
 #[derive(Clone)]
 pub struct Peer{
-    active: bool,
+    timeout: u64,
     ip_address: IpAddr,
     port: u16,
     username: String,
@@ -59,9 +59,6 @@ impl NetworkHandler {
         debug!("Active peer list requested:");
         let mut active_peer_list: Vec<Peer> = Vec::new();
         for peer in self.peers.clone() {
-            if peer.1.active == false {
-                continue;
-            }
             debug!("Peer: {}", peer.1.username);
             active_peer_list.push(peer.1);
         }
