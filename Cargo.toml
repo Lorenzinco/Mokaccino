@@ -9,6 +9,7 @@ authors = ["[Lorenzinco,LoldemortXP]"]
 [dependencies]
 colored = "2.0.0"
 const_format = "0.2.31"
+ctrlc = "3.4.0"
 env_logger = "0.10.0"
 hashmap = "0.0.1"
 log = "0.4.19"

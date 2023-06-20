@@ -1,6 +1,10 @@
 use std::sync::mpsc;
 use log::debug;
 
+#[path="./functions.rs"]
+mod functions;
+use functions::{help,exit};
+
 pub struct Parser{
     input : String,
     output : String,
@@ -42,22 +46,20 @@ impl Parser{
             command = command.trim().to_string();
             debug!("command:{}",command);
             //execute command
+            let mut command_output = String::new();
             match command.as_str(){
                 "help" => {
-                    self.output = String::from(r"
-                    help: shows this help
-                    exit: exits the program
-                    ");
+                    command_output = help(lines);
                 },
                 "exit" => {
-                    std::process::exit(0);
+                    exit();
                 },
                 _ => {
-                    self.output = String::from("command not found");
+                    command_output = String::from("command not found");
                 }
             }
-            //send output
-            self.output = String::from("output");
+            //send output to terminal
+            self.output = command_output;
         }
     }
 

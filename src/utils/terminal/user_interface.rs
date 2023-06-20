@@ -17,10 +17,6 @@ pub const BANNER:&'static str = formatcp!("
 \x1b[92m  \\/_/  \\/_/ \x1b[0m  \\/_____/   \\/_/\\/_/   \\/_/\\/_/   \\/_____/   \\/_____/   \\/_/   \\/_/ \\/_/   \\/_____/ 
    \x1b[94mBuild version: {} - Authors:{} - Copyright © \x1b[92mTRX\x1b[94m, all rights reserved. \n\x1b[0mType help for a list of commands\n",env!("CARGO_PKG_VERSION"),env!("CARGO_PKG_AUTHORS"));
 
-pub const HELP:&str = r"
-
-";
-
 pub struct Input{
     input : String,
     tx: mpsc::Sender<String>,
