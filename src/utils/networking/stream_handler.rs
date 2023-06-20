@@ -3,7 +3,6 @@ use std::net::{IpAddr, UdpSocket};
 
 pub struct StreamHandler {
     stream: UdpSocket,
-    port: u16
 }
 
 impl StreamHandler {
@@ -11,15 +10,14 @@ impl StreamHandler {
     pub fn new(port: u16) -> StreamHandler {
         debug!("Creating a new stream handler");
         StreamHandler {
-            stream: UdpSocket::bind(format!("127.0.0.1:{}", port)).expect("Error binding socket"),
-            port: port
+            stream: UdpSocket::bind(format!("127.0.0.1:{}", port)).expect("Error binding socket")
         }
     }
 
     //getters
     pub fn get_port(&self) -> u16 {
         debug!("Port requested");
-        self.port
+        self.stream.local_addr().unwrap().port()
     }
 
     //functions

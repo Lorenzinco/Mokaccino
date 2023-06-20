@@ -65,7 +65,7 @@ impl Output{
         self.output = self.rx.recv().unwrap();
         if self.output != String::from(""){ //if isnt empty, print
             print!("\r\x1b[2K");
-            println!("[\x1b[94m*\x1b[0m]{}",self.output.clone());
+            println!("[\x1b[94m*\x1b[0m] {}",self.output.clone());
             print!("\x1b[92m>\x1b[0m ");
             io::stdout().flush().unwrap();
         }
