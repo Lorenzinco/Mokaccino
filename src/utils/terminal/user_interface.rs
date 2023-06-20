@@ -42,6 +42,7 @@ impl Input{
     //prints the cursor waiting for an input, then sends it through the channel
     pub fn get_input(&mut self){
         self.input.clear();
+        print!("\r\x1b[2K");
         print!("\x1b[92m>\x1b[0m ");
 
         io::stdout().flush().unwrap();
@@ -67,9 +68,10 @@ impl Output{
     pub fn print_output(&mut self){
         self.output = self.rx.recv().unwrap();
         if self.output != String::from(""){ //if isnt empty, print
-            println!("\r\x1b[2K");
+            print!("\r\x1b[2K");
             println!("[\x1b[94m*\x1b[0m]{}",self.output.clone());
-            print!("\x1b[92m>\x1b[0m ")
+            print!("\x1b[92m>\x1b[0m ");
+            io::stdout().flush().unwrap();
         }
     }
 

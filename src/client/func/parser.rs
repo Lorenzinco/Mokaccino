@@ -42,6 +42,20 @@ impl Parser{
             command = command.trim().to_string();
             debug!("command:{}",command);
             //execute command
+            match command.as_str(){
+                "help" => {
+                    self.output = String::from(r"
+                    help: shows this help
+                    exit: exits the program
+                    ");
+                },
+                "exit" => {
+                    std::process::exit(0);
+                },
+                _ => {
+                    self.output = String::from("command not found");
+                }
+            }
             //send output
             self.output = String::from("output");
         }

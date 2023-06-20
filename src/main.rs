@@ -1,38 +1,26 @@
-use log::{debug, info, warn};
 mod utils;
-use std::sync::mpsc;
-use std::thread;
+mod client;
+mod server;
 
-fn main() {
-    env_logger::init();
-    info!("Starting Mokaccino...");
-    let (input_tx,output_rx) = mpsc::channel();
-    let (parser_tx,parser_rx) = mpsc::channel();
-    
-    let mut parser: utils::terminal::parser::Parser = utils::terminal::parser::Parser::new(parser_tx,output_rx);
-    let mut input: utils::terminal::user_interface::Input = utils::terminal::user_interface::Input::new(input_tx);
-    let mut output: utils::terminal::user_interface::Output = utils::terminal::user_interface::Output::new(parser_rx);
+use log::{debug, info, warn};
+use std::env::args;
 
-    let input: thread::JoinHandle<_> = thread::spawn(move || {
-        loop{
-            input.get_input();
-        }
-    });
-    let output: thread::JoinHandle<_> = thread::spawn(move || {
-        loop{
-            output.print_output();
-        }
-    });
-    let cmd: thread::JoinHandle<_> = thread::spawn(move || {
-        loop{
-            parser.get_input();
-            parser.execute_command();
-            parser.send_output();
-        }
-    });
 
-    input.join().unwrap();
-    output.join().unwrap();
-    cmd.join().unwrap();
+fn main() {    
+    let mode = args().nth(0).expect("missing mode argument. Usage ./mokaccino [client|server]");
+    match mode.as_str(){
+        "client" => {
+            info!("Starting client...");
+            client::client::client();
+        },
+        "server" => {
+            info!("Starting server...");
+            //server::();
+        },
+        _ => {
+            println!("Invalid mode. Usage mokaccino [-client|-server]");
+            std::process::exit(1);
+        }
+    }
 }
 
