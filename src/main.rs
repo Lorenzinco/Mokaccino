@@ -2,6 +2,8 @@ mod utils;
 mod client;
 mod server;
 
+use crate::client::client::Client;
+
 use log::{debug, info, warn};
 use std::env::args;
 
@@ -11,7 +13,8 @@ fn main() {
     match mode.as_str(){
         "client" => {
             info!("Starting client...");
-            client::client::client();
+            let mut client: Client = Client::new();
+            client.run();
         },
         "server" => {
             info!("Starting server...");
