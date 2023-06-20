@@ -37,3 +37,8 @@ pub fn exit(){
     println!("Bye!");
     std::process::exit(0);
 }
+
+pub fn login(){
+    println!("\x1b[95mLogging in...\x1b[0m");
+    println!("Logged in!");
+}
