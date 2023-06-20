@@ -23,12 +23,12 @@ impl StreamHandler {
     }
 
     //functions
-    pub fn send_message(&self, message: String, ip_address: IpAddr, port: u16) {
+    pub fn send(&self, payload: String, ip_address: IpAddr, port: u16) {
         debug!("Sending message to {}:{}", ip_address, port);
-        self.stream.send_to(message.as_bytes(), format!("{}:{}", ip_address, port)).expect("Error sending message");
+        self.stream.send_to(payload.as_bytes(), format!("{}:{}", ip_address, port)).expect("Error sending message");
     }
 
-    pub fn receive_message(&self) -> String {
+    pub fn receive(&self) -> String {
         debug!("Message incoming");
         let mut buffer = [0; 1024];
         let (number_of_bytes, src_addr) = self.stream.recv_from(&mut buffer).expect("Error receiving message");

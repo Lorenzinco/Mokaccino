@@ -1,4 +1,6 @@
-
+use log::info;
+mod utils;
 fn main() {
-    println!("Hello, world!");
+    info!("Starting Mokaccino...");
+    print!("{}",utils::terminal::user_interface::BANNER);
 }
