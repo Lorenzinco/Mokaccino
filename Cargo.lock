@@ -188,6 +188,7 @@ dependencies = [
  "env_logger",
  "hashmap",
  "log",
+ "regex",
 ]
 
 [[package]]

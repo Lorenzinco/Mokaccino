@@ -1,17 +1,17 @@
 use std::sync::mpsc;
 use log::debug;
 
-pub struct parser{
+pub struct Parser{
     input : String,
     output : String,
     tx: mpsc::Sender<String>,
     rx: mpsc::Receiver<String>,
 }
 
-impl parser{
+impl Parser{
     //constructor
-    pub fn new(tx: mpsc::Sender<String>, rx: mpsc::Receiver<String>) -> parser{
-        parser{
+    pub fn new(tx: mpsc::Sender<String>, rx: mpsc::Receiver<String>) -> Parser{
+        Parser{
             input : String::new(),
             output : String::new(),
             tx: tx,
@@ -19,7 +19,7 @@ impl parser{
         }
     }
 
-    pub fn parse_input(&mut self){
+    pub fn get_input(&mut self){
             //get input from terminal
             self.input = self.rx.recv().unwrap();
             debug!("parser received:{}",self.input);
@@ -32,8 +32,19 @@ impl parser{
 
     pub fn execute_command(&mut self){
         //parse input
-        //execute command
-        //send output
+        self.input = self.input.trim().to_string();
+        if self.input.is_empty(){
+            self.output = String::from("");
+        }
+        else{
+            let lines: Vec<&str> = self.input.split("\n").collect();
+            let mut command = String::from(lines[0]);
+            command = command.trim().to_string();
+            debug!("command:{}",command);
+            //execute command
+            //send output
+            self.output = String::from("output");
+        }
     }
 
     //setters

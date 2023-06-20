@@ -9,7 +9,7 @@ fn main() {
     let (input_tx,output_rx) = mpsc::channel();
     let (parser_tx,parser_rx) = mpsc::channel();
     
-    let mut parser: utils::terminal::parser::parser = utils::terminal::parser::parser::new(parser_tx,output_rx);
+    let mut parser: utils::terminal::parser::Parser = utils::terminal::parser::Parser::new(parser_tx,output_rx);
     let mut input: utils::terminal::user_interface::Input = utils::terminal::user_interface::Input::new(input_tx);
     let mut output: utils::terminal::user_interface::Output = utils::terminal::user_interface::Output::new(parser_rx);
 
@@ -25,7 +25,7 @@ fn main() {
     });
     let cmd: thread::JoinHandle<_> = thread::spawn(move || {
         loop{
-            parser.parse_input();
+            parser.get_input();
             parser.execute_command();
             parser.send_output();
         }
