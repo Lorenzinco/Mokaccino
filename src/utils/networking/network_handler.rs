@@ -23,6 +23,7 @@ pub struct Peer{
 #[derive(Clone)]
 pub struct NetworkHandler {
     peers: HashMap<String,Peer>,
+    pending_peers: HashMap<String,Peer>,
     username: String,
     public_key: String,
     private_key: String,
@@ -36,6 +37,7 @@ impl NetworkHandler {
         debug!("Creating a new network handler");
         NetworkHandler {
             peers: HashMap::new(),
+            pending_peers: HashMap::new(),
             username: username,
             public_key: public_key,
             private_key: private_key
