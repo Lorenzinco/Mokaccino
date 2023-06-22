@@ -6,7 +6,7 @@ use crate::utils::networking::protocol;
 
 pub struct Packet {
     pub addr: SocketAddr,
-    pub payload: [u8; protocol::PACKET_MAX_LENGTH]
+    pub payload: [u8]
 }
 
 pub struct Socket {

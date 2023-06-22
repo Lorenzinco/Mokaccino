@@ -30,7 +30,7 @@ impl Server {
 
     pub fn ping(&mut self) {
         // ping logic
-        let packet: Packet = Packet{addr : self.addr,payload : [OPCODE_PING;PACKET_MAX_LENGTH]};
+        let packet = Packet {addr: self.addr, payload: [OPCODE_PING; PACKET_MAX_LENGTH]};
         self.send(packet);   
     }
 }
