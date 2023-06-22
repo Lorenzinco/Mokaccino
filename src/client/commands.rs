@@ -1,7 +1,7 @@
 // da vedere come implementare i comandi bene
 // use const_format::formatcp;
 use crate::utils::terminal::cli;
-use crate::client::network::peer::Peer;
+use crate::client::network::peerConnection::PeerConnection;
 
 pub const MESSAGE_HELP: &str = "Avaliable commands:
     \x1b[96mconnect\x1b[95m <username>\x1b[0m - connects to a user
@@ -22,7 +22,7 @@ pub fn help(args: Vec<&str>) {
     cli::output(output);
 }
 
-pub fn connect(args: Vec<&str>, username: &str, peer: &mut Option<Peer>) {
+pub fn connect(args: Vec<&str>, username: &str, peer: &mut Option<PeerConnection>) {
     let output = match args.len() {
         1 => "Please specify an username.",
         2 => {

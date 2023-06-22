@@ -2,17 +2,14 @@ mod utils;
 mod client;
 mod server;
 
-use crate::client::client::Client;
-
-use log::{info, error};
 use std::env::args;
+use utils::terminal::cli;
 
 fn main() {
     env_logger::init();
     
     ctrlc::set_handler(move || {
-        print!("\r\x1b[2K");
-        println!("\x1b[95mExiting...\x1b[0m");
+        cli::info("\r\x1b[2K\x1b[95mExiting...\x1b[0m");
         println!("Bye!");
         std::process::exit(0);
     })
@@ -20,22 +17,21 @@ fn main() {
 
     match args().nth(1) {
         None => {
-            error!("Usage: ./mokaccino <client/server>");
+            cli::error("Usage: ./mokaccino <client/server>");
             std::process::exit(1);
         },
         Some(mode) => {
             match mode.to_lowercase().as_str() {
                 "client" => {
-                    info!("Starting Mokaccino in client mode...");
-                    let client: Client = Client::new();
-                    client.run();
-                }
+                    cli::info("Starting Mokaccino in client mode...");
+                    client::client::run();
+                },
                 "server" => {
-                    info!("Starting Mokaccino in server mode...");
-                    // server::();
-                }
+                    cli::info("Starting Mokaccino in server mode...");
+                    // server::run();
+                },
                 _ => {
-                    error!("Usage: ./mokaccino <client/server>");
+                    cli::error("Usage: ./mokaccino <client/server>");
                     std::process::exit(1);
                 }
             }
