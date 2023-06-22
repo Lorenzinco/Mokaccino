@@ -1,5 +1,6 @@
 // da vedere come implementare i comandi bene
-use const_format::formatcp;
+// use const_format::formatcp;
+use crate::utils::terminal::cli;
 use crate::client::network::peer::Peer;
 
 pub const MESSAGE_HELP: &str = "Avaliable commands:
@@ -7,8 +8,8 @@ pub const MESSAGE_HELP: &str = "Avaliable commands:
     \x1b[96mhelp\x1b[95m <command>\x1b[0m - shows help for a command
     \x1b[96mexit\x1b[0m - exits the program";
 
-pub fn help(args: Vec<&str>) -> &str {
-    match args.len() {
+pub fn help(args: Vec<&str>) {
+    let output = match args.len() {
         0 => MESSAGE_HELP,
         1 => {
             match args[0] {
@@ -17,19 +18,21 @@ pub fn help(args: Vec<&str>) -> &str {
             }
         },
         _ => "Too many arguments. Type \"\x1b[96mhelp \x1b[95m<command>\x1b[0m\" to read how to use a command."
-    }
+    };
+    cli::output(output);
 }
 
-pub fn connect(args: Vec<&str>,peer: Peer) -> &str{
-    match args.len() {
-        1 => "Missing argument. Type \"help <command>\" to read how to use a command.",
+pub fn connect(args: Vec<&str>, username: &str, peer: &mut Option<Peer>) {
+    let output = match args.len() {
+        1 => "Please specify an username.",
         2 => {
-            if args[1] == peer.username{
+            if args[1] == username {
                 "You can't connect to yourself."
             } else {
-                "Connecting..."
+                "Attempting to connect..."
             }
         },
-        _ => "Too many arguments. Type \"help <command>\" to read how to use a command."
-    }
+        _ => "Too many arguments."
+    };
+    cli::output(output);
 } 

@@ -2,9 +2,10 @@ use std::net::SocketAddr;
 use std::time::SystemTime;
 
 pub struct Peer {
-    last_ping: SystemTime,
-    addr: SocketAddr,
     username: String,
+    addr: SocketAddr,
+    last_sent: SystemTime,
+    last_received: SystemTime
 }
 
 impl Peer {

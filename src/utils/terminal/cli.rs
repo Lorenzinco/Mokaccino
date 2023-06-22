@@ -1,11 +1,7 @@
-use const_format::formatcp;
+use log;
 use std::env;
 use std::io::{self, Write};
-/*
-    Definition of the user interface class, which reads the user input in the terminal
-    as a separate thread, and sends the input to the main thread through a channel.
-    The main thread then processes the input and sends the output to the user interface.
-*/
+use const_format::formatcp;
 
 pub const BANNER: &'static str = formatcp!("
 \x1b[92m __    __ \x1b[0m    ______     __  __     ______     ______     ______     __     __   __     ______    
@@ -28,11 +24,14 @@ pub fn input() -> String {
 }
 
 pub fn output(s: &str) {
-    println!("\r\x1b[2K[\x1b[94m*\x1b[0m] {}", s);
+    println!("{}", s);
     io::stdout().flush().unwrap();
 }
 
+pub fn info(s: &str) {
+    log::info!("\r\x1b[2K[\x1b[94m*\x1b[0m] {}", s);
+}
+
 pub fn error(s: &str) {
-    // println!("")
-    io::stdout().flush().unwrap();
+    log::error!("\r\x1b[2K[\x1b[91m*\x1b[0m] {}", s);
 }
