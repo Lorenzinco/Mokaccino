@@ -1,20 +1,23 @@
-use std::net::{IpAddr};
 use std::sync::mpsc::{Sender, Receiver};
+use std::net::SocketAddr;
+use std::time::SystemTime;
 
-#[path = "../../utils/mod.rs"]
-mod utils;
-use utils::networking::socket::Packet;
+use crate::utils::networking::socket::Packet;
 
 pub struct Server {
-    last_ping: u64,
-    ip: IpAddr,
-    port: u16,
+    last_ping: SystemTime,
+    addr: SocketAddr,
     packet_rx: Receiver<Packet>,
     packet_tx: Sender<Packet>
 }
 
 impl Server {
-    pub fn connect(server: IpAddr) -> Server {
-        // ...
+    pub fn connect(server: SocketAddr, packet_rx: Receiver<Packet>, packet_tx: Sender<Packet>) -> Server {
+        Server {
+            last_ping: SystemTime::now(),
+            addr: server,
+            packet_rx: packet_rx,
+            packet_tx: packet_tx
+        }
     }
 }
