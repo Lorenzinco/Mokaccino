@@ -25,14 +25,12 @@ impl Server {
         }
     }
 
-    pub fn send(&mut self, packet: Packet) {
-        // send logic
+    pub fn send(&mut self, payload: [u8; PACKET_MAX_LENGTH]) {
+        let packet = Packet {addr: self.addr, payload: payload};
         self.packet_tx.send(packet).unwrap();
     }
 
     pub fn ping(&mut self) {
-        // ping logic
-        let packet = Packet {addr: self.addr, payload: [OPCODE_PING; PACKET_MAX_LENGTH]};
-        self.send(packet);   
+        self.send([OPCODE_PING; PACKET_MAX_LENGTH]); // ...meh
     }
 }

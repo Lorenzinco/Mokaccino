@@ -18,8 +18,6 @@ fn main() {
     })
     .expect("Couldn't bind handler to CTRL-C");
 
-    let mode = args().nth(1);
-
     match args().nth(1) {
         None => {
             error!("Usage: ./mokaccino <client/server>");
