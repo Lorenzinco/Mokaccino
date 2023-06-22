@@ -2,7 +2,7 @@ use std::sync::mpsc::{Sender, Receiver};
 use std::net::SocketAddr;
 use std::time::SystemTime;
 
-use crate::utils::networking::socket::Packet;
+use crate::utils::networking::socket::{Packet, Socket};
 
 pub struct Server {
     last_ping: SystemTime,
@@ -13,6 +13,7 @@ pub struct Server {
 
 impl Server {
     pub fn connect(server: SocketAddr, packet_rx: Receiver<Packet>, packet_tx: Sender<Packet>) -> Server {
+        // connection logic
         Server {
             last_ping: SystemTime::now(),
             addr: server,

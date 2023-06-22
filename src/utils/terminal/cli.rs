@@ -27,9 +27,12 @@ pub fn input() -> String {
     buffer
 }
 
-pub fn output(str: String) {
-    println!("\r\x1b[2K[\x1b[94m*\x1b[0m] {}", str);
+pub fn output(s: &str) {
+    println!("\r\x1b[2K[\x1b[94m*\x1b[0m] {}", s);
     io::stdout().flush().unwrap();
 }
 
-// TODO: error()
+pub fn error(s: &str) {
+    // println!("")
+    io::stdout().flush().unwrap();
+}

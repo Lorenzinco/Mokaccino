@@ -1,1 +1,0 @@
-static PACKET_MAX_LENGTH: u16 = 32768;

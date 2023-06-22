@@ -34,7 +34,8 @@ impl Client {
             ready: false,
             socket: socket::Socket::new(port, server, socket_rx, server_tx, peer_tx),
             server: network::server::Server::connect(server, server_rx, socket_tx),
-            peer: None
+            peer: None,
+            
         }
     }
 
