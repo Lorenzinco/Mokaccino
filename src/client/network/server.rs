@@ -3,6 +3,7 @@ use std::net::SocketAddr;
 use std::time::SystemTime;
 
 use crate::utils::networking::socket::{Packet, Socket};
+use crate::utils::networking::protocol::{*};
 
 pub struct Server {
     last_ping: SystemTime,
@@ -20,5 +21,16 @@ impl Server {
             packet_rx: packet_rx,
             packet_tx: packet_tx
         }
+    }
+
+    pub fn send(&mut self, packet: Packet) {
+        // send logic
+        self.packet_tx.send(packet).unwrap();
+    }
+
+    pub fn ping(&mut self) {
+        // ping logic
+        let packet: Packet = Packet{addr : self.addr,payload : [OPCODE_PING;PACKET_MAX_LENGTH]};
+        self.send(packet);   
     }
 }

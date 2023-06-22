@@ -1,5 +1,5 @@
 {
-    "server": "localhost:32323",
-    "username": "ErCoppa",
+    "server": "127.0.0.1:32323",
+    "username": "lorenzinco",
     "port": 23232
 }

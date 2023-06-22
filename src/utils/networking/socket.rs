@@ -5,8 +5,8 @@ use std::sync::mpsc::{Sender, Receiver};
 use crate::utils::networking::protocol;
 
 pub struct Packet {
-    addr: SocketAddr,
-    payload: [u8; protocol::PACKET_MAX_LENGTH]
+    pub addr: SocketAddr,
+    pub payload: [u8; protocol::PACKET_MAX_LENGTH]
 }
 
 pub struct Socket {
