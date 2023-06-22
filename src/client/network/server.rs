@@ -1,4 +1,4 @@
-use std::net::{ToSocketAddrs, IpAddr};
+use std::net::{IpAddr};
 use std::sync::mpsc::{Sender, Receiver};
 
 #[path = "../../utils/mod.rs"]

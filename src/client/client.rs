@@ -2,8 +2,9 @@ use log::debug;
 use std::thread;
 use std::fs;
 use std::sync::mpsc;
+use std::net::ToSocketAddrs;
 use utils::networking;
-use utils::terminal::cli::Cli;
+use utils::terminal::cli;
 
 #[path = "../utils/mod.rs"]
 mod utils;
@@ -12,9 +13,9 @@ mod network;
 
 pub struct Client {
     ready: bool,
-    socket: networking::Socket,
-    server: network::server,
-    peer: Option<network::peer>
+    socket: networking::socket::Socket,
+    server: network::server::Server,
+    peer: Option<network::peer::Peer>
 }
 
 impl Client {
@@ -23,9 +24,9 @@ impl Client {
         let config_file = fs::read_to_string("./config.json").expect("Unable to read config file");
         let config: serde_json::Value = serde_json::from_str(&config_file).expect("Unable to parse config file");
         
-        let cfg_username: String = config.get("username").unwrap();
+        let cfg_username: String = config.get("username").unwrap().as_str().unwrap();
         let cfg_local_port: String = config.get("local_port").unwrap(); // TODO: va convertito in u16
-        let cfg_server_host: String = config.get("server_host").unwrap();
+        let cfg_server_host: String = config.get("server_host").unwrap().as_str().unwrap();
         let cfg_server_port: String = config.get("server_port").unwrap(); // TODO: va convertito in u16
 
         let server_addr = match cfg_server_host.to_socket_addrs().unwrap().next() {
@@ -55,7 +56,7 @@ impl Client {
         });
         let cli: thread::JoinHandle<_> = thread::spawn(move || loop {
             if(self.ready) {
-                let command: String = cli.input();
+                let command: String = cli::input();
                 match command {
                     _ => println!("Not implemented")
                 }
