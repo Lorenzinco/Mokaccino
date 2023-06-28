@@ -7,6 +7,7 @@ authors = ["[Lorenzinco, LoldemortXP]"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+clap = { version = "4.3.8", features = ["derive"] }
 colored = "2.0.0"
 const_format = "0.2.31"
 ctrlc = "3.4.0"
