@@ -1,9 +1,6 @@
-mod utils;
-mod client;
-mod server;
+use mokaccino::client::client::{Client};
 
 use std::env::args;
-use utils::terminal::cli;
 
 fn main() {
     env_logger::init();
@@ -24,7 +21,8 @@ fn main() {
             match mode.to_lowercase().as_str() {
                 "client" => {
                     cli::info("Starting Mokaccino in client mode...");
-                    client::client::run();
+                    let client = Client::new();
+                    client::start();
                 },
                 "server" => {
                     cli::info("Starting Mokaccino in server mode...");
