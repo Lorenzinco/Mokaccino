@@ -1,4 +1,4 @@
-pub const PACKET_MAX_LENGTH: usize = 1472;
+
 
 
 pub const SERVER_TIMEOUT: u8 = 30;

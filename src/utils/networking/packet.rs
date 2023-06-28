@@ -1,9 +1,12 @@
 use std::net::SocketAddr;
-use crate::utils::networking::protocol::{*};
 
-pub const EMPTY_PACKET: [u8; PACKET_MAX_LENGTH] = [0; PACKET_MAX_LENGTH];
+pub const MTU: usize = 1472;
+pub const EMPTY_PACKET: [u8; MTU] = [0; MTU];
+
+
+
 
 pub struct Packet {
     pub addr: SocketAddr,
-    pub payload: [u8; PACKET_MAX_LENGTH]
+    pub payload: [u8; MTU]
 }
