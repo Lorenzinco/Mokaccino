@@ -1,24 +1,15 @@
 use std::{
     net::UdpSocket,
-    sync::mpsc::{
-        Sender,
-        Receiver,
-    },
 };
 use crate::utils::networking::packet::{Packet,MTU};
-
 pub struct NetworkHandler{
     pub socket: UdpSocket,
-    pub send_rx: Receiver<Packet>,
-    pub recv_tx: Sender<Packet>
 }
 
 impl NetworkHandler{
-    pub fn new(socket: UdpSocket, send_rx: Receiver<Packet>, recv_tx: Sender<Packet>) -> NetworkHandler{
+    pub fn new(socket: UdpSocket) -> NetworkHandler{
         NetworkHandler{
             socket,
-            send_rx,
-            recv_tx,
         }
     }
 

@@ -17,6 +17,7 @@ log = "0.4.19"
 regex = "1.8.4"
 serde = {version = "1.0.164", features = ["derive"]}
 serde_json = "1.0.97"
+soundio = "0.2.1"
 toml = "0.7.5"
 tui = "0.19.0"
 

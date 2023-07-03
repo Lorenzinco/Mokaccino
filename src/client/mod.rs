@@ -1,3 +1,4 @@
 pub mod client;
-pub mod voice;
+pub mod microphone;
+pub mod speaker;
 pub mod ui;

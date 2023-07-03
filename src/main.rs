@@ -1,4 +1,3 @@
-use mokaccino::client::client::Client;
 use clap::Parser;
 
 /// Simple program to greet a person
