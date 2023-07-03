@@ -1,4 +1,5 @@
 use clap::Parser;
+use mokaccino::client::client;
 
 /// Simple program to greet a person
 #[derive(Parser, Debug)]
@@ -12,7 +13,5 @@ struct Args {
 }
 
 fn main() {
-    //let args = Args::parse();
-    //println!("{:?}", args);
-
+    client::start();
 }

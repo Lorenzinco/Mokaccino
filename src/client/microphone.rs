@@ -4,39 +4,44 @@ use std::{
         Receiver,
     },
 };
-use soundio::{
-    Context::new,
+use cpal::{
+    traits::{DeviceTrait, HostTrait},
+    DeviceNameError,
+    StreamConfig,
 };
 
 pub struct Microphone{
     pub microphone_recv_rx: Receiver<Vec<u8>>,
     pub microphone_trasmit_tx: Sender<Vec<u8>>,
-    pub selected_mic: soundio::Device,
-    pub avaliable_microphones: Vec<soundio::Device>,
+    pub selected_microphone: cpal::Device,
+    pub avaliable_microphones: std::iter::Filter<cpal::Devices, fn(&cpal::Device) -> bool>,
+    pub supported_config: cpal::StreamConfig,
 }
 
 impl Microphone{
     pub fn new(microphone_recv_rx: Receiver<Vec<u8>>, microphone_trasmit_tx: Sender<Vec<u8>>) -> Microphone{
-        let mut context = new();
-        avaliable_microphones = context.input_devices();
-        selected_mic = context.default_input_device();
-        microphone{
+        let host: cpal::Host = cpal::default_host();
+        let selected_microphone: cpal::Device = host.default_input_device().expect("No input device avaliable.");
+        let avaliable_microphones: std::iter::Filter<cpal::Devices, fn(&cpal::Device) -> bool> = host.input_devices().unwrap();
+        let mut supported_configs_range: cpal::SupportedOutputConfigs = selected_microphone.supported_output_configs()
+        .expect("error while querying configs");
+        let supported_config: cpal::StreamConfig = StreamConfig{buffer_size:cpal::BufferSize::Fixed(1500), sample_rate:cpal::SampleRate(44100), channels:2};
+        Microphone{
             microphone_recv_rx,
             microphone_trasmit_tx,
-            selected_mic,
+            selected_microphone,
             avaliable_microphones,
+            supported_config
         }
     }
 
-    pub fn get_selected_mic(&self) -> soundio::Device{
-        self.selected_mic
+    pub fn get_selected_microphone(&self) -> Result<std::string::String, DeviceNameError>{
+        self.selected_microphone.name()
     }
 
-    pub fn set_select_mic(&mut self, mic: soundio::Device){
-        self.selected_mic = mic
+    pub fn set_microphone(&mut self, microphone: cpal::Device){
+        self.selected_microphone = microphone;
     }
 
-    pub fn get_avaliable_mics(&self) -> Vec<soundio::Device>{
-        self.avaliable_microphones
-    }
+
 }
