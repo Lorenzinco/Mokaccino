@@ -15,7 +15,7 @@ pub struct Microphone{
     pub microphone_trasmit_tx: Sender<Vec<u8>>,
     pub selected_microphone: cpal::Device,
     pub avaliable_microphones: std::iter::Filter<cpal::Devices, fn(&cpal::Device) -> bool>,
-    pub supported_config: cpal::StreamConfig,
+    pub config: cpal::StreamConfig,
 }
 
 impl Microphone{
@@ -23,15 +23,17 @@ impl Microphone{
         let host: cpal::Host = cpal::default_host();
         let selected_microphone: cpal::Device = host.default_input_device().expect("No input device avaliable.");
         let avaliable_microphones: std::iter::Filter<cpal::Devices, fn(&cpal::Device) -> bool> = host.input_devices().unwrap();
-        let mut supported_configs_range: cpal::SupportedOutputConfigs = selected_microphone.supported_output_configs()
+        //let avaliable_microphones2: std::iter::Filter<cpal::Devices, fn(&cpal::Device) -> bool> = host.input_devices().unwrap();
+        let supported_configs_range: cpal::SupportedOutputConfigs = selected_microphone.supported_output_configs()
         .expect("error while querying configs");
-        let supported_config: cpal::StreamConfig = StreamConfig{buffer_size:cpal::BufferSize::Fixed(1500), sample_rate:cpal::SampleRate(44100), channels:2};
+        let supported_config = selected_microphone.default_input_config().expect("error while querying default config");
+        let config: cpal::StreamConfig = supported_config.config();
         Microphone{
             microphone_recv_rx,
             microphone_trasmit_tx,
             selected_microphone,
             avaliable_microphones,
-            supported_config
+            config
         }
     }
 

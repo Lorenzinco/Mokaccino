@@ -52,18 +52,18 @@ pub fn start(){
     let ui = Ui::new(ui_input_tx, ui_display_rx);
 
         //start all the threads
-    let networking_upstream_thread = thread::spawn(move || {
+    /*let networking_upstream_thread = thread::spawn(move || {
             //start the networking upstream thread
         loop{
-            let packet = networking_send_rx.recv();
-            //network_handler_rx.send(packet);
+            let packet = networking_send_rx.recv().unwrap();
+            network_handler_rx.send(packet);
         }
     });
     let networking_downstream_thread = thread::spawn(move || {
         //start the networking downstream thread
         loop{
             let packet = network_handler_tx.recv();
-            networking_recv_tx.send(packet);
+            networking_recv_tx.send(packet).unwrap();
         }
     });
     let ui_input_thread = thread::spawn(move || {
@@ -76,13 +76,14 @@ pub fn start(){
         //start the ui display thread
         loop{
             let display = String::from("test");
-            ui_display_tx.send(display);
+            ui_display_tx.send(display).unwrap();
         }
     });
+    */
     let microphone_recv_thread: Result<cpal::Stream, cpal::BuildStreamError> = microphone.selected_microphone.build_output_stream(
-        &microphone.supported_config,
+        &microphone.config,
         move |_data: &mut [f32], _: &cpal::OutputCallbackInfo| {
-            log::debug!("microphone stream called");
+            println!("microphone stream called");
         },
         move |err| {
             log::error!("an error occurred on microphone stream: {}", err);
@@ -92,7 +93,7 @@ pub fn start(){
     let speaker_send_thread: Result<cpal::Stream, cpal::BuildStreamError> = speaker.selected_speaker.build_input_stream(
         &speaker.supported_config,
         move |_data: & [f32], _: &cpal::InputCallbackInfo| {
-            
+            println!("speaker stream called");
         },
         move |err| {
             log::error!("an error occurred on speaker stream: {}", err);
@@ -102,15 +103,18 @@ pub fn start(){
          // None=blocking, Some(Duration)=timeout
     );
 
-    microphone_recv_thread.unwrap().play()
+    microphone_recv_thread.expect("Cant start recording microphone").play()
     .expect("failed to record microphone");
 
-    speaker_send_thread.unwrap().play()
+    speaker_send_thread.expect("Cant start playng back audio").play()
     .expect("failed to play speaker");
 
     //join all the threads
+    /*
+    
     networking_upstream_thread.join().unwrap();
     networking_downstream_thread.join().unwrap();
     ui_input_thread.join().unwrap();
     ui_display_thread.join().unwrap();
+     */
 }
