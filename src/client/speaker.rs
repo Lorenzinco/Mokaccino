@@ -1,38 +1,32 @@
-use std::{
-    sync::mpsc::{
-        Sender,
-        Receiver,
-    },
-};
 use cpal::{
     traits::{DeviceTrait, HostTrait},
     DeviceNameError,
-    StreamConfig
 };
 
 pub struct Speaker{
-    pub speaker_recv_rx: Receiver<Vec<u8>>,
-    pub speaker_trasmit_tx: Sender<Vec<u8>>,
     pub selected_speaker: cpal::Device,
     pub avaliable_speakers: std::iter::Filter<cpal::Devices, fn(&cpal::Device) -> bool>,
-    pub supported_config: cpal::StreamConfig,
+    pub config: cpal::StreamConfig,
 }
 
 impl Speaker{
-    pub fn new(speaker_recv_rx: Receiver<Vec<u8>>, speaker_trasmit_tx: Sender<Vec<u8>>) -> Speaker{
+    pub fn new() -> Speaker{
         let host: cpal::Host = cpal::default_host();
-        let selected_speaker: cpal::Device = host.default_input_device().expect("No input device avaliable.");
-        let avaliable_speakers: std::iter::Filter<cpal::Devices, fn(&cpal::Device) -> bool> = host.input_devices().unwrap();
+        let selected_speaker: cpal::Device = host.default_output_device().expect("No output device avaliable.");
+        let avaliable_speakers: std::iter::Filter<cpal::Devices, fn(&cpal::Device) -> bool> = host.output_devices().unwrap();
 
         let mut supported_configs_range: cpal::SupportedOutputConfigs = selected_speaker.supported_output_configs()
-        .expect("error while querying configs");
-        let supported_config: cpal::StreamConfig = StreamConfig{buffer_size:cpal::BufferSize::Fixed(1500), sample_rate:cpal::SampleRate(44100), channels:2};
+            .expect("error while querying configs");
+        //get the supported config that has 1 channel and the highest sample rate
+        let supported_config = supported_configs_range.next()
+            .expect("no supported config?!")
+            .with_max_sample_rate();
+        let mut config: cpal::StreamConfig = supported_config.config();
+        config.channels = 1;
         Speaker{
-            speaker_recv_rx,
-            speaker_trasmit_tx,
             selected_speaker,
             avaliable_speakers,
-            supported_config,
+            config,
         }
     }
 

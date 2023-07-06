@@ -13,7 +13,7 @@ use std::{
 };
 use cpal::{
     Data,
-    traits::{DeviceTrait, HostTrait, StreamTrait},
+    traits::{DeviceTrait, HostTrait, StreamTrait}, Sample,
 };
 
 use crate::utils::{
@@ -36,18 +36,18 @@ pub fn start(){
     let (networking_recv_tx, networking_recv_rx) = channel::<Packet>();
     let (ui_input_tx, ui_input_rx) = channel::<String>();
     let (ui_display_tx, ui_display_rx) = channel::<String>();
-    let (microphone_recv_tx, microphone_recv_rx) = channel::<Vec<u8>>();
-    let (microphone_send_tx, microphone_send_rx) = channel::<Vec<u8>>();
-    let (speaker_recv_tx, speaker_recv_rx) = channel::<Vec<u8>>();
-    let (speaker_send_tx, speaker_send_rx) = channel::<Vec<u8>>();
+    let (microphone_recv_tx, microphone_recv_rx) = channel::<Vec<f32>>();
+    let (microphone_send_tx, microphone_send_rx) = channel::<Vec<f32>>();
+    let (speaker_recv_tx, speaker_recv_rx) = channel::<Vec<f32>>();
+    let (speaker_send_tx, speaker_send_rx) = channel::<Vec<f32>>();
 
     let config: Config = Config::new();
     let socket: UdpSocket = UdpSocket::bind(config.server_addr+":23232").expect("Unable to bind to socket");
     let network_handler_rx =Arc::new(NetworkHandler::new(socket));
     let network_handler_tx = network_handler_rx.clone();
 
-    let microphone: Microphone = Microphone::new(microphone_recv_rx, microphone_send_tx);
-    let speaker:Speaker = Speaker::new(speaker_recv_rx, speaker_send_tx);
+    let microphone: Microphone = Microphone::new();
+    let speaker:Speaker = Speaker::new();
 
     let ui = Ui::new(ui_input_tx, ui_display_rx);
 
@@ -80,20 +80,26 @@ pub fn start(){
         }
     });
     */
-    let microphone_recv_thread: Result<cpal::Stream, cpal::BuildStreamError> = microphone.selected_microphone.build_output_stream(
+    let microphone_recv_thread: Result<cpal::Stream, cpal::BuildStreamError> = microphone.selected_microphone.build_input_stream(
         &microphone.config,
-        move |_data: &mut [f32], _: &cpal::OutputCallbackInfo| {
+        move |data: & [f32], _: &cpal::InputCallbackInfo| {
             println!("microphone stream called");
+            speaker_send_tx.send(data.to_vec()).expect("failed to send microphone data");
         },
         move |err| {
             log::error!("an error occurred on microphone stream: {}", err);
         },
         None // None=blocking, Some(Duration)=timeout
     );
-    let speaker_send_thread: Result<cpal::Stream, cpal::BuildStreamError> = speaker.selected_speaker.build_input_stream(
-        &speaker.supported_config,
-        move |_data: & [f32], _: &cpal::InputCallbackInfo| {
+    let speaker_send_thread: Result<cpal::Stream, cpal::BuildStreamError> = speaker.selected_speaker.build_output_stream(
+        &speaker.config,
+        move |data: &mut [f32], _: &cpal::OutputCallbackInfo| {
             println!("speaker stream called");
+            let vector: Vec<f32> = speaker_send_rx.recv().expect("failed to receive speaker data");
+            for (i, sample) in data.iter_mut().enumerate() {
+                println!("{:?}",vector[i]);
+                *sample = vector[i];
+            }
         },
         move |err| {
             log::error!("an error occurred on speaker stream: {}", err);
@@ -103,13 +109,15 @@ pub fn start(){
          // None=blocking, Some(Duration)=timeout
     );
 
-    microphone_recv_thread.expect("Cant start recording microphone").play()
-    .expect("failed to record microphone");
+    //microphone_recv_thread.expect("Cant start recording audio").play()
+    //    .expect("failed to play microphone");
 
-    speaker_send_thread.expect("Cant start playng back audio").play()
-    .expect("failed to play speaker");
+    //speaker_send_thread.expect("Cant start playng back audio").play()
+    //    .expect("failed to play speaker");
 
     //join all the threads
+    //sleep 10 seconds
+    thread::sleep(Duration::from_secs(10));
     /*
     
     networking_upstream_thread.join().unwrap();
