@@ -83,7 +83,6 @@ pub fn start(){
     let microphone_recv_thread: Result<cpal::Stream, cpal::BuildStreamError> = microphone.selected_microphone.build_input_stream(
         &microphone.config,
         move |data: & [f32], _: &cpal::InputCallbackInfo| {
-            println!("microphone stream called");
             speaker_send_tx.send(data.to_vec()).expect("failed to send microphone data");
         },
         move |err| {
@@ -94,10 +93,8 @@ pub fn start(){
     let speaker_send_thread: Result<cpal::Stream, cpal::BuildStreamError> = speaker.selected_speaker.build_output_stream(
         &speaker.config,
         move |data: &mut [f32], _: &cpal::OutputCallbackInfo| {
-            println!("speaker stream called");
             let vector: Vec<f32> = speaker_send_rx.recv().expect("failed to receive speaker data");
             for (i, sample) in data.iter_mut().enumerate() {
-                println!("{:?}",vector[i]);
                 *sample = vector[i];
             }
         },

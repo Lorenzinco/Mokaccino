@@ -19,8 +19,10 @@ impl Microphone{
         let supported_config = supported_configs_range.next()
             .expect("no supported config?!")
             .with_max_sample_rate();
-        let config: cpal::StreamConfig = supported_config.config();
+        let mut config: cpal::StreamConfig = supported_config.config();
         println!("Microphone config: {:?}", config);
+        config.channels = 1;
+        config.buffer_size = cpal::BufferSize::Fixed(16);
         Microphone{
             selected_microphone,
             avaliable_microphones,
