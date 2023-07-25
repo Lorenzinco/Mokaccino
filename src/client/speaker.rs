@@ -24,7 +24,7 @@ impl Speaker{
         let mut config: cpal::StreamConfig = supported_config.config();
         config.channels = 1;
         config.buffer_size = cpal::BufferSize::Fixed(16);
-        println!("{:?}",config.buffer_size);
+        log::debug!("{:?}",config.buffer_size);
         Speaker{
             selected_speaker,
             avaliable_speakers,

@@ -1,6 +1,4 @@
-use std::{
-    net::UdpSocket,
-};
+use std::net::UdpSocket;
 use crate::utils::networking::packet::{Packet,MTU};
 pub struct NetworkHandler{
     pub socket: UdpSocket,

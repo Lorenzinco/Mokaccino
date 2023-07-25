@@ -16,11 +16,18 @@ impl Microphone{
         let avaliable_microphones: std::iter::Filter<cpal::Devices, fn(&cpal::Device) -> bool> = host.input_devices().unwrap();
         let mut supported_configs_range: cpal::SupportedInputConfigs = selected_microphone.supported_input_configs()
             .expect("error while querying configs");
+        let supported_configs_range_debug: cpal::SupportedInputConfigs = selected_microphone.supported_input_configs()
+            .expect("error while querying configs");
+        //print supported configs
+        log::debug!("Supported configs:");
+        for supported_config in supported_configs_range_debug{
+            log::debug!("{:?}", supported_config);
+        }
         let supported_config = supported_configs_range.next()
             .expect("no supported config?!")
             .with_max_sample_rate();
         let mut config: cpal::StreamConfig = supported_config.config();
-        println!("Microphone config: {:?}", config);
+        log::debug!("Microphone config: {:?}", config);
         config.channels = 1;
         config.buffer_size = cpal::BufferSize::Fixed(16);
         Microphone{

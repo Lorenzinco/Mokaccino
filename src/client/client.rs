@@ -1,37 +1,67 @@
 use std::{
-    sync::{mpsc::{
-        channel,
-        Sender,
-        Receiver,
-    },
-    Arc
+    sync::{
+        mpsc::{
+            channel,
+            Sender,
+            Receiver,
+        },
+        Arc
     },
     thread,
     time::Duration,
     net::{UdpSocket, IpAddr},
-
+    io, slice::Chunks
 };
 use cpal::{
     Data,
     traits::{DeviceTrait, HostTrait, StreamTrait}, Sample,
 };
-
-use crate::utils::{
-    networking::{
-        packet::Packet,
-        networkhandler::NetworkHandler,
+use crossterm::{event::{Event, KeyCode, self, EnableMouseCapture}, terminal::{enable_raw_mode, EnterAlternateScreen}, execute};
+use tui::{backend::{Backend, CrosstermBackend}, Terminal};
+use crate::{
+    utils::{
+        networking::{
+            packet::Packet,
+            networkhandler::NetworkHandler,
+            peer::Peer,
+        },
+        config::Config,
     },
-    config::Config,
+    client::{
+        microphone::Microphone,
+        speaker::Speaker,
+        ui::ui::{ui,run_app},
+    }
 };
-use crate::client::{
-    microphone::Microphone,
-    speaker::Speaker,
-    ui::ui::Ui,
-};
+
+pub struct Client{
+    pub peers: Vec<Peer>,
+    pub index: usize,
+}
+
+impl Client {
+    fn new() -> Client {
+        Client {
+            peers: vec![Peer{username:String::from("Server"),ip_addr:String::from("mokaccino.ddns.net"),port:23232}],
+            index: 0,
+        }
+    }
+
+    pub fn next(&mut self) {
+        self.index = (self.index + 1) % self.peers.len();
+    }
+
+    pub fn previous(&mut self) {
+        if self.index > 0 {
+            self.index -= 1;
+        } else {
+            self.index = self.peers.len() - 1;
+        }
+    }
+}
 
 
-pub fn start(){
-
+pub fn start()->Result<(), Box<dyn std::error::Error>>{
     let (networking_send_tx, networking_send_rx) = channel::<Packet>();
     let (networking_recv_tx, networking_recv_rx) = channel::<Packet>();
     let (ui_input_tx, ui_input_rx) = channel::<String>();
@@ -49,7 +79,15 @@ pub fn start(){
     let microphone: Microphone = Microphone::new();
     let speaker:Speaker = Speaker::new();
 
-    let ui = Ui::new(ui_input_tx, ui_display_rx);
+    let mut app: Client = Client::new();
+    //ui start
+    // setup terminal
+    enable_raw_mode()?;
+    let mut stdout = io::stdout();
+    execute!(stdout, EnterAlternateScreen, EnableMouseCapture)?;
+    let backend = CrosstermBackend::new(stdout);
+    let mut terminal = Terminal::new(backend)?;
+    run_app(&mut terminal, app);
 
         //start all the threads
     /*let networking_upstream_thread = thread::spawn(move || {
@@ -66,8 +104,13 @@ pub fn start(){
             networking_recv_tx.send(packet).unwrap();
         }
     });
+     */
+    
+
+
+
     let ui_input_thread = thread::spawn(move || {
-        //start the ui input thread
+
         loop{
             let input = ui_input_rx.recv();
         }
@@ -79,7 +122,7 @@ pub fn start(){
             ui_display_tx.send(display).unwrap();
         }
     });
-    */
+    /*
     let microphone_recv_thread: Result<cpal::Stream, cpal::BuildStreamError> = microphone.selected_microphone.build_input_stream(
         &microphone.config,
         move |data: & [f32], _: &cpal::InputCallbackInfo| {
@@ -106,6 +149,9 @@ pub fn start(){
          // None=blocking, Some(Duration)=timeout
     );
 
+ */
+    //Sleep 10 seconds
+    thread::sleep(Duration::from_secs(10));
     //microphone_recv_thread.expect("Cant start recording audio").play()
     //    .expect("failed to play microphone");
 
@@ -113,13 +159,15 @@ pub fn start(){
     //    .expect("failed to play speaker");
 
     //join all the threads
-    //sleep 10 seconds
-    thread::sleep(Duration::from_secs(10));
-    /*
+    // restore terminal
     
+    /*
     networking_upstream_thread.join().unwrap();
     networking_downstream_thread.join().unwrap();
-    ui_input_thread.join().unwrap();
-    ui_display_thread.join().unwrap();
      */
+    //ui_input_thread.join().unwrap();
+    //ui_display_thread.join().unwrap();
+    Ok(())
 }
+
+
